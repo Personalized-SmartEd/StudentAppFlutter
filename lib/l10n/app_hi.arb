@@ -1,0 +1,17 @@
+{
+    "helloWorld": "नमस्ते दुनिया!",
+    "@helloWorld": {
+      "description": "स्क्रीन पर दिखाया गया अभिवादन संदेश"
+    },
+    "hello": "नमस्ते {userName}",
+    "@hello": {
+      "description": "उपयोगकर्ता के नाम के साथ अभिवादन संदेश",
+      "placeholders": {
+        "userName": {
+          "type": "String",
+          "example": "राम"
+        }
+      }
+    }
+  }
+  

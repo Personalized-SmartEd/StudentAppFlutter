@@ -1,0 +1,51 @@
+{
+  "loginTitle": "Login",
+  "@loginTitle": {
+    "description": "Title of the login screen"
+  },
+  "emailLabel": "Email",
+  "@emailLabel": {
+    "description": "Label for the email input field"
+  },
+  "passwordLabel": "Password",
+  "@passwordLabel": {
+    "description": "Label for the password input field"
+  },
+  "loginButton": "Login",
+  "@loginButton": {
+    "description": "Text on the button to initiate login"
+  },
+
+  "signupLink": "Don't have an account? Sign up",
+  "@signupLink": {
+    "description": "Link to the signup screen for new users"
+  },
+  "invalidCredentials": "Invalid email or password",
+  "@invalidCredentials": {
+    "description": "Error message when login credentials are incorrect"
+  },
+  "loginSuccess": "Welcome back, {userName}!",
+  "@loginSuccess": {
+    "description": "Message displayed upon successful login",
+    "placeholders": {
+      "userName": {
+        "type": "String",
+        "example": "Alice"
+      }
+    }
+  },
+  "helloWorld": "Hello World!",
+  "@helloWorld": {
+    "description": "The conventional newborn programmer greeting"
+  },
+  "hello": "Hello {userName}",
+  "@hello": {
+    "description": "A message with a single parameter",
+    "placeholders": {
+      "userName": {
+        "type": "String",
+        "example": "Bob"
+      }
+    }
+  }
+}

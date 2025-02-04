@@ -1,0 +1,13 @@
+{
+  "helloWorld": "¡Hola Mundo!",
+  "hello": "Hola {userName}",
+  "@hello": {
+    "description": "Un mensaje con un único parámetro",
+    "placeholders": {
+      "userName": {
+        "type": "String",
+        "example": "Bob"
+      }
+    }
+  }
+}
