@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -49,7 +50,7 @@ class AuthServices {
     }
   }
 
-  static void loginUser({
+  static Future<void> loginUser({
     required BuildContext context,
     required String password,
     required String email,
@@ -66,7 +67,6 @@ class AuthServices {
         Uri.parse('${Endpoints.baseURL}/login'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
-          
         },
         body: jsonEncode(<String, String>{
           'email': email,
@@ -134,5 +134,65 @@ class AuthServices {
     navigator.push(
       MaterialPageRoute(builder: (context) => const SplashScreen()),
     );
+  }
+
+  static Future<void> signupUser({
+    required BuildContext context,
+    required String password,
+    required String email,
+    required String Name,
+    required int Age,
+    required String SchoolName,
+    required String SchoolCode,
+    required File Image,
+    required List<String> Subjects,
+    required String Class,
+  }) async {
+    if (email.isEmpty ||
+        password.isEmpty ||
+        Name.isEmpty ||
+        Age == 0 ||
+        SchoolName.isEmpty ||
+        SchoolCode.isEmpty ||
+        Subjects.isEmpty ||
+        Class.isEmpty) {
+      showSnackBar(context, 'All fields are required.');
+      return;
+    }
+
+    try {
+      final navigator = Navigator.of(context);
+      var userProvider = Provider.of<UserProvider>(context, listen: false);
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('${Endpoints.baseURL}/signup'),
+      );
+      request.fields.addAll({
+        'Name': Name,
+        'Age': Age.toString(), // Convert int to String if required
+        'Password': password,
+        'Email': email,
+        'SchoolName': SchoolName,
+        'SchoolCode': SchoolCode,
+        'Subjects': jsonEncode(Subjects),
+        'Class': Class,
+      });
+
+      request.files
+          .add(await http.MultipartFile.fromPath('Image', Image!.path));
+      http.StreamedResponse response = await request.send();
+      if (response.statusCode < 300) {
+        print(await response.stream.bytesToString());
+
+        showSnackBar(context, "User created successfully.");
+      } else {
+        print(response.reasonPhrase);
+        showSnackBar(context, "Failed to create user.");
+        // Handle error here
+      }
+    } catch (e) {
+      print(e.toString());
+      showSnackBar(context, " error ?? ${e.toString()}");
+    }
   }
 }

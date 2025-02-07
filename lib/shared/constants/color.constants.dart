@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class ColorConstants {
   static const Color scaffoldBackground = Color(0xffF0F0F0);
-  static const Color primary = Color(0xFFFF482E);
+  static const Color primary = Color(0xFF00BAFF);
   static const Color midnight = Color(0xff171717);
   static const Color red = Color(0xffE51818);
   static const Color tangBlue = Color(0xff2161DD);

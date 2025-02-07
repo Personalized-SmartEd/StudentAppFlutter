@@ -60,7 +60,8 @@ class _PrimaryButtonState extends State<PrimaryButton>
           backgroundColor: widget.customColor,
           padding: widget.padding ??
               const EdgeInsets.symmetric(horizontal: 44, vertical: 12),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
           elevation: 0,
           splashFactory: NoSplash.splashFactory, // remove ripple effect
           shadowColor: Colors.transparent, // button shadow on pressed

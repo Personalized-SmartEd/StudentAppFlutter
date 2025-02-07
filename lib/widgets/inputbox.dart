@@ -58,7 +58,7 @@ class InputBox extends StatelessWidget {
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30.0),
               borderSide: BorderSide(
-                color: Colors.blue,
+                color: Theme.of(context).colorScheme.primary,
                 width: 1.5,
               ),
             ),
