@@ -14,12 +14,11 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  AuthServices authService = AuthServices();
   @override
   void initState() {
     super.initState();
     print("Starting app");
-    authService.getUserData(context);
+    AuthServices.getUserData(context);
     print("Started app");
     Timer(const Duration(seconds: 1), () {
       final navigator = Navigator.of(context);
@@ -38,9 +37,6 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
-        title: const Text("Splash Screen"),
-      ),
       body: Container(
         decoration: const BoxDecoration(color: Colors.blue),
         child: const Center(

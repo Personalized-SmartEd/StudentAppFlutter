@@ -1,0 +1,16 @@
+export 'body_10_medium.dart';
+export 'body_10_semibold.dart';
+export 'body_12_medium.dart';
+export 'body_12_regular.dart';
+export 'body_12_semibold.dart';
+export 'body_14_medium.dart';
+export 'body_14_regular.dart';
+export 'heading_12_bold.dart';
+export 'heading_14_bold.dart';
+export 'heading_14_semibold.dart';
+export 'heading_16_semibold.dart';
+export 'heading_18_bold.dart';
+export 'heading_20_semibold.dart';
+export 'heading_24_semibold.dart';
+export 'heading_32_bold.dart';
+export 'heading_42_bold.dart';

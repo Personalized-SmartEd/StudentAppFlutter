@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:smarted/feature/auth/auth_services.dart';
+import 'package:smarted/widgets/button.dart';
+import 'package:smarted/widgets/button/primary_button.dart';
+import 'package:smarted/widgets/button/secondary_button.dart';
+import 'package:smarted/widgets/inputbox.dart';
+import 'package:rive/rive.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -16,7 +21,7 @@ class _LoginState extends State<Login> {
     if (_formKey.currentState?.validate() ?? false) {
       print('Email: ${_emailController.text}');
       print('Password: ${_passwordController.text}');
-      authService.loginUser(
+      AuthServices.loginUser(
         context: context,
         password: _passwordController.text,
         email: _emailController.text,
@@ -36,7 +41,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: const Text('Login'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -45,35 +50,28 @@ class _LoginState extends State<Login> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextFormField(
+              InputBox(
+                label: "Email",
+                placeholder: "example@gmail.com",
                 controller: _emailController,
-                // initialValue: "email@gmail.com",
-                decoration: const InputDecoration(labelText: 'Email'),
-                validator: (value) {
-                  if (value == null || value.isEmpty || !value.contains('@')) {
-                    return 'Please enter a valid email address';
-                  }
-                  return null;
-                },
+                obscureText: false,
               ),
               const SizedBox(height: 16),
-              TextFormField(
+              InputBox(
+                label: "Password",
+                placeholder: "********",
                 controller: _passwordController,
-                // initialValue: "password",
-                decoration: const InputDecoration(labelText: 'Password'),
                 obscureText: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your password';
-                  }
-                  return null;
-                },
               ),
               const SizedBox(height: 24),
-              ElevatedButton(
+              PrimaryButton(
                 onPressed: _login,
-                child: const Text('Login'),
+                label: "Login",
+                customColor: Colors.blue[300],
               ),
+              RiveAnimation.asset(
+                'assets/rive/cat_button.riv',
+              )
             ],
           ),
         ),
