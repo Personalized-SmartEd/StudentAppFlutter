@@ -26,7 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(const Duration(seconds: 3), () {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       Navigator.of(context).pushReplacement(
-          _createRoute(userProvider.user.id != "" ? const Home() : Login()));
+          _createRoute(userProvider.user.id != "" ? Home() : Login()));
     });
     _riveController = OneShotAnimation(
       'Animation',

@@ -9,6 +9,7 @@ import 'package:smarted/feature/auth/auth_services.dart';
 import 'package:smarted/shared/typography/heading_24_semibold.dart';
 import 'package:smarted/widgets/button/primary_button.dart';
 import 'package:smarted/widgets/inputbox.dart';
+import 'package:smarted/widgets/snackbar.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -96,7 +97,7 @@ class _SignUpState extends State<SignUp> {
     _nameController.text = 'John Doe';
     _schoolNameController.text = 'School Name';
     _schoolCodeController.text = 'School Code';
-    _classController.text = 'Class';
+    _classController.text = '1';
   }
 
   Future<void> _Signup() async {
@@ -107,18 +108,32 @@ class _SignUpState extends State<SignUp> {
       print('Email: ${_emailController.text}');
       print('Password: ${_passwordController.text}');
       print('Age: ${_ageController.text}');
+      print('Name: ${_nameController.text}');
+      print('School Name: ${_schoolNameController.text}');
+      print('School Code: ${_schoolCodeController.text}');
+      print('Class: ${_classController.text}');
+      print('Subjects: $tags');
+      print('Image: $image');
+    }
+    if (image == null) {
+      showSnackBar(context, "please select an Image");
+      setState(() {
+        isPressed = false;
+      });
+      return;
     }
     await AuthServices.signupUser(
-        Age: int.parse(_ageController.text),
-        context: context,
-        password: _passwordController.text,
-        email: _emailController.text,
-        Name: '',
-        SchoolName: '',
-        SchoolCode: '',
-        Image: image,
-        Subjects: subjects,
-        Class: '');
+      Age: _ageController.text,
+      context: context,
+      password: _passwordController.text,
+      email: _emailController.text,
+      Name: _nameController.text,
+      SchoolName: _schoolNameController.text,
+      SchoolCode: _schoolCodeController.text,
+      Image: image,
+      Subjects: tags,
+      Class: _classController.text,
+    );
     setState(() {
       isPressed = false;
     });
@@ -279,7 +294,7 @@ class _SignUpState extends State<SignUp> {
                       ),
                     ),
                     PrimaryButton(
-                      onPressed: submit,
+                      onPressed: _Signup,
                       label: "Signup",
                       customColor: Theme.of(context).colorScheme.primary,
                       isDisabled: isPressed,

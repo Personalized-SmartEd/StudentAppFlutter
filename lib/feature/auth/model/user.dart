@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class User {
   String id;
   String name;
@@ -10,16 +12,17 @@ class User {
   String schoolCode;
   List<String> subjects;
   String pace;
-  String className;
+  String classNumber;
+  String classCode;
   int performance;
   String performanceLvl;
   List<int> pastPerformance;
-  List<String> learningStyle;
+  String learningStyle;
   String token;
   String refreshToken;
   String createdAt;
   String updatedAt;
-  
+
   User({
     required this.id,
     required this.name,
@@ -32,7 +35,8 @@ class User {
     required this.schoolCode,
     required this.subjects,
     required this.pace,
-    required this.className,
+    required this.classNumber,
+    required this.classCode,
     required this.performance,
     required this.performanceLvl,
     required this.pastPerformance,
@@ -43,50 +47,68 @@ class User {
     required this.updatedAt,
   });
 
-  User.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        name = json['Name'],
-        age = json['Age'],
-        password = json['Password'],
-        email = json['Email'],
-        studentID = json['StudentID'],
-        image = json['Image'],
-        schoolName = json['SchoolName'],
-        schoolCode = json['SchoolCode'],
-        subjects = List<String>.from(json['Subjects']),
-        pace = json['Pace'],
-        className = json['Class'],
-        performance = json['Performance'],
-        performanceLvl = json['PerformanceLvl'],
-        pastPerformance = List<int>.from(json['PastPerformance']),
-        learningStyle = List<String>.from(json['LearningStyle']),
-        token = json['Token'],
-        refreshToken = json['RefreshToken'],
-        createdAt = json['created_at'],
-        updatedAt = json['updated_at'];
-
-  Map<String, dynamic> toJson() {
+  /// Convert User object to a Map (useful for sending data)
+  Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'Name': name,
-      'Age': age,
-      'Password': password,
-      'Email': email,
-      'StudentID': studentID,
-      'Image': image,
-      'SchoolName': schoolName,
-      'SchoolCode': schoolCode,
-      'Subjects': subjects,
-      'Pace': pace,
-      'Class': className,
-      'Performance': performance,
-      'PerformanceLvl': performanceLvl,
-      'PastPerformance': pastPerformance,
-      'LearningStyle': learningStyle,
-      'Token': token,
-      'RefreshToken': refreshToken,
-      'created_at': createdAt,
-      'updated_at': updatedAt,
+      'name': name,
+      'age': age,
+      'password': password,
+      'email': email,
+      'studentID': studentID,
+      'image': image,
+      'schoolName': schoolName,
+      'schoolCode': schoolCode,
+      'subjects': subjects,
+      'pace': pace,
+      'classNumber': classNumber,
+      'classCode': classCode,
+      'performance': performance,
+      'performanceLvl': performanceLvl,
+      'pastPerformance': pastPerformance,
+      'learningStyle': learningStyle,
+      'token': token,
+      'refreshToken': refreshToken,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
     };
+  }
+
+  /// Convert a Map into a User object (Fixed)
+  factory User.fromMap(Map<String, dynamic> map) {
+    return User(
+      id: map['id'] ?? '',
+      name: map['Name'] ?? '',
+      age: (map['Age'] is int)
+          ? map['Age']
+          : int.tryParse(map['Age'].toString()) ?? 0,
+      password: map['Password'] ?? '',
+      email: map['Email'] ?? '',
+      studentID: map['StudentID'] ?? '',
+      image: map['Image'] ?? '',
+      schoolName: map['SchoolName'] ?? '',
+      schoolCode: map['SchoolCode'] ?? '',
+      subjects: List<String>.from(map['Subjects'] ?? []),
+      pace: map['Pace'] ?? '',
+      classNumber: map['ClassNumber'].toString(), // Convert int to String
+      classCode: map['ClassCode'] ?? '',
+      performance: (map['Performance'] is int) ? map['Performance'] : 0,
+      performanceLvl: map['PerformanceLvl'] ?? '',
+      pastPerformance: List<int>.from(map['PastPerformance'] ?? [0]),
+      learningStyle: map['LearningStyle'] ?? '',
+      token: map['Token'] ?? '',
+      refreshToken: map['RefreshToken'] ?? '',
+      createdAt: map['created_at'] ?? '',
+      updatedAt: map['updated_at'] ?? '',
+    );
+  }
+
+  /// Convert User object to JSON
+  String toJson() => json.encode(toMap());
+
+  /// Convert JSON string to User object
+  factory User.fromJson(String source) {
+    final Map<String, dynamic> decodedMap = json.decode(source);
+    return User.fromMap(decodedMap);
   }
 }

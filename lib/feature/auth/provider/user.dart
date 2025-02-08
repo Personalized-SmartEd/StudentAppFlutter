@@ -15,15 +15,16 @@ class UserProvider extends ChangeNotifier {
     schoolCode: '',
     subjects: [],
     pace: '',
-    className: '',
     performance: 0,
     performanceLvl: '',
     pastPerformance: [],
-    learningStyle: [],
+    learningStyle: '',
     token: '',
     refreshToken: '',
     createdAt: '',
     updatedAt: '',
+    classNumber: '',
+    classCode: '',
   );
 
   // Getter to access the user object
@@ -53,11 +54,12 @@ class UserProvider extends ChangeNotifier {
     String? schoolCode,
     List<String>? subjects,
     String? pace,
-    String? className,
+    String? classCode,
+    String? classNumber,
     int? performance,
     String? performanceLvl,
     List<int>? pastPerformance,
-    List<String>? learningStyle,
+    String? learningStyle,
     String? token,
     String? refreshToken,
     String? createdAt,
@@ -74,7 +76,8 @@ class UserProvider extends ChangeNotifier {
     if (schoolCode != null) user.schoolCode = schoolCode;
     if (subjects != null) user.subjects = subjects;
     if (pace != null) user.pace = pace;
-    if (className != null) user.className = className;
+    if (classCode != null) user.classCode = classCode;
+    if (classNumber != null) user.classNumber = classNumber;
     if (performance != null) user.performance = performance;
     if (performanceLvl != null) user.performanceLvl = performanceLvl;
     if (pastPerformance != null) user.pastPerformance = pastPerformance;

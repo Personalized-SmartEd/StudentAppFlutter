@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 import 'package:smarted/feature/auth/auth_services.dart';
 import 'package:smarted/feature/auth/signup/signup_page.dart';
-import 'package:smarted/shared/typography/heading_12_bold.dart';
-import 'package:smarted/shared/typography/heading_20_bold.dart';
 import 'package:smarted/shared/typography/heading_24_semibold.dart';
 import 'package:smarted/widgets/button/primary_button.dart';
 import 'package:smarted/widgets/divider.dart';
@@ -24,7 +22,7 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
-    _emailController.text = 'email@gmail.com';
+    _emailController.text = 'k@gmail.com';
     _passwordController.text = 'password';
     _riveController = OneShotAnimation(
       'isPressed',
