@@ -22,7 +22,7 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
-    _emailController.text = 'k@gmail.com';
+    _emailController.text = 'ee@gmail.com';
     _passwordController.text = 'password';
     _riveController = OneShotAnimation(
       'isPressed',
@@ -39,8 +39,8 @@ class _LoginState extends State<Login> {
       print('Password: ${_passwordController.text}');
       await AuthServices.loginUser(
         context: context,
-        password: _passwordController.text,
-        email: _emailController.text,
+        Password: _passwordController.text,
+        Email: _emailController.text,
       );
     }
     setState(() {

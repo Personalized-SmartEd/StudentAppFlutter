@@ -91,7 +91,7 @@ class _SignUpState extends State<SignUp> {
   @override
   void initState() {
     super.initState();
-    _emailController.text = 'email@gmail.com';
+    _emailController.text = 'gg@gmail.com';
     _passwordController.text = 'password';
     _ageController.text = '15';
     _nameController.text = 'John Doe';
@@ -125,8 +125,8 @@ class _SignUpState extends State<SignUp> {
     await AuthServices.signupUser(
       Age: _ageController.text,
       context: context,
-      password: _passwordController.text,
-      email: _emailController.text,
+      Password: _passwordController.text,
+      Email: _emailController.text,
       Name: _nameController.text,
       SchoolName: _schoolNameController.text,
       SchoolCode: _schoolCodeController.text,

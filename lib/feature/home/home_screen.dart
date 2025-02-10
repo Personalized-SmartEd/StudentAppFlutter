@@ -1,5 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:smarted/feature/auth/auth_services.dart';
+import 'package:smarted/feature/auth/provider/user.dart';
+import 'package:smarted/feature/home/page/home_page.dart';
+import 'package:smarted/feature/quiz/assessment_services.dart';
+import 'package:smarted/feature/quiz/assestment_quiz_page.dart';
+import 'package:smarted/feature/quiz/quiz_page.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -32,16 +40,35 @@ class _HomeState extends State<Home> {
   Widget _getBody(String label) {
     switch (label) {
       case "Home":
-        return Home();
+        return HomePage();
       case "Quiz":
-        return Home();
+        return HomePage();
       case "Classrooms":
-        return Home();
+        return HomePage();
       case "Settings":
-        return Home();
+        return HomePage();
       default:
-        return Home();
+        return HomePage();
     }
+    // return Container();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // AuthServices.logout(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      var user = Provider.of<UserProvider>(context, listen: false);
+      print("assessment");
+
+      print(jsonEncode(user.user));
+      if (user.user.LearningStyle == "") {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => AssestmentQuiz()),
+          (route) => false,
+        );
+      }
+    });
   }
 
   @override

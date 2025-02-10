@@ -19,7 +19,7 @@ class Assessment {
   factory Assessment.fromMap(Map<String, dynamic> map) {
     return Assessment(
       questions: List<Question>.from(
-        (map['questions'] as List<int>).map<Question>(
+        (map['questions'] as List).map<Question>(
           (x) => Question.fromMap(x as Map<String, dynamic>),
         ),
       ),

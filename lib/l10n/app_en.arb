@@ -5,7 +5,7 @@
   },
   "emailLabel": "Email",
   "@emailLabel": {
-    "description": "Label for the email input field"
+    "description": "Label for the Email input field"
   },
   "passwordLabel": "Password",
   "@passwordLabel": {
@@ -20,7 +20,7 @@
   "@signupLink": {
     "description": "Link to the signup screen for new users"
   },
-  "invalidCredentials": "Invalid email or password",
+  "invalidCredentials": "Invalid Email or password",
   "@invalidCredentials": {
     "description": "Error message when login credentials are incorrect"
   },

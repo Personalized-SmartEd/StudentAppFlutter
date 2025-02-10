@@ -19,10 +19,10 @@ class Question {
   factory Question.fromMap(Map<String, dynamic> map) {
     return Question(
       options: map['options'] != null
-          ? List<String>.from((map['options'] as List<String>))
+          ? List<String>.from(map['options'].map((x) => x.toString()))
           : null,
-      qid: map['qid'] != null ? map['qid'] as int : null,
-      question: map['question'] != null ? map['question'] as String : null,
+      qid: map['qid'] as int?,
+      question: map['question'] as String?,
     );
   }
 

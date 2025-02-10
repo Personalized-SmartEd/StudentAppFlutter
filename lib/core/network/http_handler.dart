@@ -10,6 +10,7 @@ void httpErrorHandle({
   required VoidCallback onSuccess,
 }) {
   // Handle success status codes
+  // if(jsonDecode(response.))
   if (response.statusCode < 300) {
     onSuccess();
   } else {

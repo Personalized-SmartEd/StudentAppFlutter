@@ -20,45 +20,50 @@ class AuthServices {
     var userProvider = Provider.of<UserProvider>(context, listen: false);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? user = await prefs.getString("user");
-
+    print(user);
+    // await prefs.setString('user', '');
     if (user == null || user == "") {
       print("user is null");
       await prefs.setString('user', '');
       User user = User(
         id: '',
-        name: '',
-        age: 0,
-        password: '',
-        email: '',
-        studentID: '',
-        image: '',
-        schoolName: '',
-        schoolCode: '',
-        subjects: [],
-        pace: '',
-        performance: 0,
-        performanceLvl: '',
-        pastPerformance: [],
-        learningStyle: '',
-        token: '',
-        refreshToken: '',
+        Name: '',
+        Age: 0,
+        Password: '',
+        Email: '',
+        StudentID: '',
+        Image: '',
+        SchoolName: '',
+        SchoolCode: '',
+        Subjects: [],
+        Pace: '',
+        Performance: 0,
+        PerformanceLvl: '',
+        PastPerformance: [],
+        LearningStyle: '',
+        Token: '',
+        RefreshToken: '',
         createdAt: '',
         updatedAt: '',
-        classNumber: '',
-        classCode: '',
+        ClassNumber: '',
+        ClassCode: [],
       );
       userProvider.setUserFromModel(user);
     } else {
-      userProvider.setUser(User.fromMap(jsonDecode(user)));
+      var jsons = jsonDecode(user);
+      if (jsons is String) {
+        jsons = jsonDecode(jsons);
+      }
+      userProvider.setUser(User.fromMap(jsons));
     }
   }
 
   static Future<void> loginUser({
     required BuildContext context,
-    required String password,
-    required String email,
+    required String Password,
+    required String Email,
   }) async {
-    if (email.isEmpty || password.isEmpty) {
+    if (Email.isEmpty || Password.isEmpty) {
       showSnackBar(context, 'All fields are required.');
       return;
     }
@@ -72,8 +77,8 @@ class AuthServices {
           'Content-Type': 'application/json; charset=UTF-8'
         },
         body: jsonEncode(<String, String>{
-          'email': email,
-          'password': password,
+          'Email': Email,
+          'Password': Password,
         }),
       );
 
@@ -112,26 +117,26 @@ class AuthServices {
     await prefs.setString('user', '');
     User usernew = User(
       id: '',
-      name: '',
-      age: 0,
-      password: '',
-      email: '',
-      studentID: '',
-      image: '',
-      schoolName: '',
-      schoolCode: '',
-      subjects: [],
-      pace: '',
-      performance: 0,
-      performanceLvl: '',
-      pastPerformance: [],
-      learningStyle: '',
-      token: '',
-      refreshToken: '',
+      Name: '',
+      Age: 0,
+      Password: '',
+      Email: '',
+      StudentID: '',
+      Image: '',
+      SchoolName: '',
+      SchoolCode: '',
+      Subjects: [],
+      Pace: '',
+      Performance: 0,
+      PerformanceLvl: '',
+      PastPerformance: [],
+      LearningStyle: '',
+      Token: '',
+      RefreshToken: '',
       createdAt: '',
       updatedAt: '',
-      classNumber: '',
-      classCode: '',
+      ClassNumber: '',
+      ClassCode: [],
     );
 
     userProvider.setUserFromModel(usernew);
@@ -142,8 +147,8 @@ class AuthServices {
 
   static Future<void> signupUser({
     required BuildContext context,
-    required String password,
-    required String email,
+    required String Password,
+    required String Email,
     required String Name,
     required String Age, // We will sanitize this
     required String SchoolName,
@@ -154,8 +159,8 @@ class AuthServices {
   }) async {
     List<String> emptyFields = [];
 
-    if (email.trim().isEmpty) emptyFields.add("Email");
-    if (password.trim().isEmpty) emptyFields.add("Password");
+    if (Email.trim().isEmpty) emptyFields.add("Email");
+    if (Password.trim().isEmpty) emptyFields.add("Password");
     if (Name.trim().isEmpty) emptyFields.add("Name");
     if (Age.trim().isEmpty) emptyFields.add("Age");
     if (SchoolName.trim().isEmpty) emptyFields.add("School Name");
@@ -198,12 +203,12 @@ class AuthServices {
         body: jsonEncode(<String, dynamic>{
           'Name': "Name",
           'Age': 22,
-          'Password': password,
-          'Email': email,
+          'Password': Password,
+          'Email': Email,
           'SchoolName': "carmel",
           'SchoolCode': "RFGE",
           'Subjects': ['Maths', 'Science'],
-          'Class': 7,
+          'class_number': 7,
           'Image': 'Image',
         }),
       );
@@ -220,7 +225,7 @@ class AuthServices {
       // 'Image': 'Image',
       // });
 
-      // Add the image file
+      // Add the Image file
       // request.files.add(await http.MultipartFile.fromPath('Image', Image.path));
 
       // Send the request

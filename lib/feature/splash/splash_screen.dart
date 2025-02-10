@@ -22,6 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     print("Starting app");
     AuthServices.getUserData(context);
+    
     print("Started app");
     Timer(const Duration(seconds: 3), () {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
