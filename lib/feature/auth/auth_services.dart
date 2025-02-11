@@ -208,7 +208,7 @@ class AuthServices {
           'SchoolName': "carmel",
           'SchoolCode': "RFGE",
           'Subjects': ['Maths', 'Science'],
-          'class_number': 7,
+          'ClassNumber': 7,
           'Image': 'Image',
         }),
       );
@@ -257,6 +257,82 @@ class AuthServices {
     } catch (e, stackTrace) {
       print("Signup Error: $e\nStack Trace: $stackTrace");
       showSnackBar(context, "An error occurred: ${e.toString()}");
+    }
+  }
+
+  static Future<User> getUserById({
+    required BuildContext context,
+    required String id,
+  }) async {
+    try {
+      var userProvider = Provider.of<UserProvider>(context, listen: false);
+      http.Response res = await http.get(
+        Uri.parse('${Endpoints.baseURL}/login'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'token': userProvider.user.Token,
+        },
+      );
+      User user = User(
+        id: '',
+        Name: '',
+        Age: 0,
+        Password: '',
+        Email: '',
+        StudentID: '',
+        Image: '',
+        SchoolName: '',
+        SchoolCode: '',
+        Subjects: [],
+        Pace: '',
+        Performance: 0,
+        PerformanceLvl: '',
+        PastPerformance: [],
+        LearningStyle: '',
+        Token: '',
+        RefreshToken: '',
+        createdAt: '',
+        updatedAt: '',
+        ClassNumber: '',
+        ClassCode: [],
+      );
+
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () async {
+          final userbody = jsonDecode(res.body);
+          print(userbody);
+          user = User.fromMap(userbody);
+        },
+      );
+      return user;
+    } catch (e) {
+      print(e.toString());
+      showSnackBar(context, " error ?? ${e.toString()}");
+      return User(
+        id: '',
+        Name: '',
+        Age: 0,
+        Password: '',
+        Email: '',
+        StudentID: '',
+        Image: '',
+        SchoolName: '',
+        SchoolCode: '',
+        Subjects: [],
+        Pace: '',
+        Performance: 0,
+        PerformanceLvl: '',
+        PastPerformance: [],
+        LearningStyle: '',
+        Token: '',
+        RefreshToken: '',
+        createdAt: '',
+        updatedAt: '',
+        ClassNumber: '',
+        ClassCode: [],
+      );
     }
   }
 }

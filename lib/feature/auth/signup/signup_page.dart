@@ -91,7 +91,7 @@ class _SignUpState extends State<SignUp> {
   @override
   void initState() {
     super.initState();
-    _emailController.text = 'gg@gmail.com';
+    _emailController.text = 'ggf@gmail.com';
     _passwordController.text = 'password';
     _ageController.text = '15';
     _nameController.text = 'John Doe';

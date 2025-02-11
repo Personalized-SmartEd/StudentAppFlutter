@@ -5,14 +5,25 @@ class Question {
   List<String>? options;
   int? qid;
   String? question;
-
-  Question({this.options, this.qid, this.question});
+  int? correct_option;
+  String? answer;
+  String? explanation;
+  Question(
+      {this.options,
+      this.qid,
+      this.question,
+      this.answer,
+      this.correct_option,
+      this.explanation});
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'options': options,
       'qid': qid,
       'question': question,
+      'correct_option': correct_option,
+      'answer': answer,
+      'explanation': explanation
     };
   }
 
@@ -23,6 +34,9 @@ class Question {
           : null,
       qid: map['qid'] as int?,
       question: map['question'] as String?,
+      correct_option: map['correct_option'] as int?,
+      answer: map['answer'] as String?,
+      explanation: map['explanation'] as String?,
     );
   }
 

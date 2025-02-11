@@ -22,7 +22,7 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
-    _emailController.text = 'ee@gmail.com';
+    _emailController.text = 'ggf@gmail.com';
     _passwordController.text = 'password';
     _riveController = OneShotAnimation(
       'isPressed',

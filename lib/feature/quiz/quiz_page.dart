@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:smarted/feature/quiz/assessment_services.dart';
 import 'package:smarted/feature/quiz/model/assessment.dart';
 import 'package:smarted/feature/quiz/model/question.dart';
+import 'package:smarted/feature/quiz/model/subjectQuiz.dart';
+import 'package:smarted/feature/quiz/subject_quiz_services.dart';
 
 class QuizPage extends StatefulWidget {
-  final Assessment assessment;
-
-  const QuizPage({super.key, required this.assessment});
+  final Assessment? assessment;
+  final Subjectquiz? subjectQuiz;
+  final String? subject;
+  const QuizPage({super.key, this.assessment, this.subjectQuiz, this.subject})
+      : assert(assessment != null || subjectQuiz != null,
+            'One of assessment or subjectQuiz must be provided.');
 
   @override
   State<QuizPage> createState() => _QuizPageState();
@@ -17,23 +22,27 @@ class _QuizPageState extends State<QuizPage> {
   int _currentIndex = 0;
   Map<int, String> selectedAnswers = {};
   late List<int> ans;
+  late List<Question> questions;
+  bool showCorrectAnswer = false;
+  bool sub = false;
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController();
-    ans = List<int>.filled(widget.assessment.questions.length, 1,
-        growable: false);
+    questions = widget.assessment?.questions ?? widget.subjectQuiz!.questions;
+    ans = List<int>.filled(questions.length, 1, growable: false);
   }
 
   void nextPage() {
-    if (_currentIndex < widget.assessment.questions.length - 1) {
+    if (_currentIndex < questions.length - 1) {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
       setState(() {
         _currentIndex++;
+        showCorrectAnswer = false;
       });
     }
   }
@@ -46,7 +55,33 @@ class _QuizPageState extends State<QuizPage> {
       );
       setState(() {
         _currentIndex--;
+        showCorrectAnswer = false;
       });
+    }
+  }
+
+  void checkAnswer(int index) {
+    setState(() {
+      showCorrectAnswer = true;
+    });
+  }
+
+  void _submitSubjectQuiz() {
+    print("subb");
+    if (widget.subjectQuiz == null) print("subbqq null");
+    if (widget.subject == null) print("subb null");
+    if (widget.subjectQuiz != null && widget.subject != null) {
+      int correctAnswers = 0;
+      widget.subjectQuiz!.questions.asMap().forEach((index, question) {
+        if (question.answer == question.options![ans[index]]) {
+          correctAnswers++;
+        }
+      });
+
+      print(correctAnswers);
+
+      SubjectQuizServices.submitSubjectQuiz(
+          ans: correctAnswers, subject: widget.subject!, context: context);
     }
   }
 
@@ -56,11 +91,11 @@ class _QuizPageState extends State<QuizPage> {
       appBar: AppBar(title: const Text("Quiz")),
       body: PageView.builder(
         controller: _pageController,
-        itemCount: widget.assessment.questions.length,
+        itemCount: questions.length,
         physics:
             const NeverScrollableScrollPhysics(), // Prevent swipe navigation
         itemBuilder: (context, index) {
-          return buildQuestionPage(widget.assessment.questions[index], index);
+          return buildQuestionPage(questions[index], index);
         },
       ),
     );
@@ -74,7 +109,7 @@ class _QuizPageState extends State<QuizPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Question ${index + 1}/${widget.assessment.questions.length}",
+            "Question ${index + 1}/${questions.length}",
             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 10),
@@ -85,8 +120,10 @@ class _QuizPageState extends State<QuizPage> {
           const SizedBox(height: 20),
           Column(
             children: question.options!.map((option) {
+              bool isCorrect = showCorrectAnswer && option == question.answer;
               return ListTile(
-                title: Text(option),
+                title: Text(option,
+                    style: TextStyle(color: isCorrect ? Colors.green : null)),
                 leading: Radio<String>(
                   value: option,
                   groupValue: selectedAnswers[index],
@@ -106,23 +143,36 @@ class _QuizPageState extends State<QuizPage> {
             children: [
               if (index > 0)
                 ElevatedButton(
-                  onPressed: previousPage,
+                  onPressed:
+                      selectedAnswers.containsKey(index) ? previousPage : null,
                   child: const Text("Previous"),
                 ),
-              if (index < widget.assessment.questions.length - 1)
+              if (index < questions.length - 1)
                 ElevatedButton(
-                  onPressed: nextPage,
+                  onPressed:
+                      selectedAnswers.containsKey(index) ? nextPage : null,
                   child: const Text("Next"),
                 ),
-              if (index == widget.assessment.questions.length - 1)
+              if (index == questions.length - 1)
                 ElevatedButton(
                   onPressed: () {
-                    // TODO: Submit answers logic
-                    AssessmentServices.sumbmitAssessment(context, ans);
+                    if (widget.assessment != null) {
+                      AssessmentServices.sumbmitAssessment(context, ans);
+                    } else if (widget.subjectQuiz != null) {
+                      // Add logic to submit subject quiz answers
+                      _submitSubjectQuiz();
+                    }
                     print("User Answers: $selectedAnswers");
                     print("User Answers: $ans");
                   },
                   child: const Text("Submit"),
+                ),
+              if (widget.subjectQuiz != null)
+                ElevatedButton(
+                  onPressed: selectedAnswers.containsKey(index)
+                      ? () => checkAnswer(index)
+                      : null,
+                  child: const Text("Check Answer"),
                 ),
             ],
           ),

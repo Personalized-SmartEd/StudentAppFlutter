@@ -2,12 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:smarted/feature/auth/auth_services.dart';
+
 import 'package:smarted/feature/auth/provider/user.dart';
 import 'package:smarted/feature/home/page/home_page.dart';
-import 'package:smarted/feature/quiz/assessment_services.dart';
 import 'package:smarted/feature/quiz/assestment_quiz_page.dart';
-import 'package:smarted/feature/quiz/quiz_page.dart';
+
+import 'package:smarted/feature/quiz/subject_quiz.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -42,7 +42,7 @@ class _HomeState extends State<Home> {
       case "Home":
         return HomePage();
       case "Quiz":
-        return HomePage();
+        return SubjectQuizPage();
       case "Classrooms":
         return HomePage();
       case "Settings":
@@ -57,8 +57,10 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     // AuthServices.logout(context);
+    
     WidgetsBinding.instance.addPostFrameCallback((_) {
       var user = Provider.of<UserProvider>(context, listen: false);
+      print(user.user.id);
       print("assessment");
 
       print(jsonEncode(user.user));
