@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:smarted/feature/auth/provider/user.dart';
+import 'package:smarted/feature/classroom/classroom.dart';
 import 'package:smarted/feature/home/page/home_page.dart';
 import 'package:smarted/feature/quiz/assestment_quiz_page.dart';
 
@@ -44,7 +45,7 @@ class _HomeState extends State<Home> {
       case "Quiz":
         return SubjectQuizPage();
       case "Classrooms":
-        return HomePage();
+        return Classroom();
       case "Settings":
         return HomePage();
       default:
@@ -57,7 +58,7 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     // AuthServices.logout(context);
-    
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       var user = Provider.of<UserProvider>(context, listen: false);
       print(user.user.id);
