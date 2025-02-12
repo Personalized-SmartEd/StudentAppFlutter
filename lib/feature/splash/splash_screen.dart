@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
+import 'package:smarted/core/route/routeAnimation.dart';
 import 'package:smarted/feature/auth/auth_services.dart';
 import 'package:smarted/feature/auth/login/login_page.dart';
 import 'package:smarted/feature/auth/provider/user.dart';
@@ -22,12 +23,12 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     print("Starting app");
     AuthServices.getUserData(context);
-    
+
     print("Started app");
     Timer(const Duration(seconds: 3), () {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
-      Navigator.of(context).pushReplacement(
-          _createRoute(userProvider.user.id != "" ? Home() : Login()));
+      Navigator.of(context).pushReplacement(RouteAnimation.BottomUpRoute(
+          userProvider.user.id != "" ? Home() : Login()));
     });
     _riveController = OneShotAnimation(
       'Animation',
@@ -43,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Container(
-        decoration: const BoxDecoration(color: Colors.blue),
+        decoration: BoxDecoration(color: Theme.of(context).primaryColor),
         child: Center(
           child: SizedBox(
             height: MediaQuery.of(context).size.height / 2,
@@ -58,22 +59,4 @@ class _SplashScreenState extends State<SplashScreen> {
       ),
     );
   }
-}
-
-Route _createRoute(Widget page) {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => page,
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      const begin = Offset(0.0, 1.0);
-      const end = Offset.zero;
-      const curve = Curves.ease;
-
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: child,
-      );
-    },
-  );
 }

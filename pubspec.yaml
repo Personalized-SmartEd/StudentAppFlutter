@@ -49,6 +49,7 @@ dependencies:
   rive_splash_screen: ^0.1.1
   image_picker: ^1.1.2
   chips_choice: ^3.0.1
+  font_awesome_flutter: ^10.8.0
   
 
 dev_dependencies:
@@ -78,6 +79,7 @@ flutter:
     - assets/rive/cat_button.riv
     - assets/rive/kid-walk.riv
     - assets/rive/bounce-button.riv
+    - assets/rive/skater_dude.riv
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

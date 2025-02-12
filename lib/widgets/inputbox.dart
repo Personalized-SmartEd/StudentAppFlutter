@@ -1,70 +1,63 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:smarted/shared/constants/color.constants.dart';
+import 'package:smarted/shared/constants/textstyle.constant.dart';
+import 'package:smarted/shared/text_styles/text_styles.dart';
 
 class InputBox extends StatelessWidget {
-  final String label;
   final String placeholder;
-
-  final dynamic controller;
-
+  final TextEditingController controller;
   final bool obscureText;
 
   const InputBox({
     Key? key,
-    required this.label,
     required this.placeholder,
     required this.controller,
-    required this.obscureText,
+    this.obscureText = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
+    final theme = Theme.of(context);
+    return TextField(
+      controller: controller,
+      obscureText: obscureText,
+      style: GoogleFonts.dmSans(
+        color: theme.colorScheme.onSurface,
+        fontSize: 16.0,
+        fontStyle: FontStyle.italic,
+      ),
+      decoration: InputDecoration(
+        hintText: placeholder,
+        hintStyle: GoogleFonts.dmSans(
+          color: theme.colorScheme.onSurface.withOpacity(0.6),
+          fontStyle: FontStyle.italic,
+        ),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20.0,
+          vertical: 15.0,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30.0),
+          borderSide: BorderSide(
+            color: theme.colorScheme.primary,
+            width: 1.5,
           ),
         ),
-        SizedBox(height: 10.0),
-        TextField(
-          controller: controller,
-          obscureText: obscureText,
-          decoration: InputDecoration(
-            hintText: placeholder,
-            hintStyle: TextStyle(
-              color: Colors.grey,
-              fontSize: 14.0,
-            ),
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: 20.0,
-              vertical: 15.0,
-            ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30.0),
-              borderSide: BorderSide(
-                color: Colors.grey,
-              ),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30.0),
-              borderSide: BorderSide(
-                color: Colors.grey,
-              ),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30.0),
-              borderSide: BorderSide(
-                color: Theme.of(context).colorScheme.primary,
-                width: 1.5,
-              ),
-            ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30.0),
+          borderSide: BorderSide(
+            color: theme.colorScheme.primary.withOpacity(0.5),
           ),
         ),
-      ],
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30.0),
+          borderSide: BorderSide(
+            color: theme.colorScheme.primary,
+            width: 2.0,
+          ),
+        ),
+      ),
     );
   }
 }

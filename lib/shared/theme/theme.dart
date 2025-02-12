@@ -10,53 +10,77 @@ class ZTheme {
     brightness: Brightness.light,
     textTheme: GoogleFonts.dmSansTextTheme(),
     colorScheme: ColorScheme.fromSeed(
-      primary: ColorConstants.primary,
       seedColor: ColorConstants.primary,
+      primary: ColorConstants.primary,
+      secondary: ColorConstants.secondary,
+      background: ColorConstants.background,
+      surface: Colors.white,
+      error: ColorConstants.error,
       brightness: Brightness.light,
     ),
-    scaffoldBackgroundColor: ColorConstants.scaffoldBackground,
+    scaffoldBackgroundColor: ColorConstants.background,
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: ColorConstants.primary,
         foregroundColor: Colors.white,
         disabledBackgroundColor: ColorConstants.primary.withOpacity(0.5),
-        disabledForegroundColor: Colors.white,
       ),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         side: const BorderSide(color: ColorConstants.primary),
         foregroundColor: ColorConstants.primary,
-        disabledForegroundColor: Colors.grey,
-      ),
-    ),
-    textButtonTheme: TextButtonThemeData(
-      style: TextButton.styleFrom(
-        foregroundColor: Colors.black,
-      ),
-    ),
-    bottomSheetTheme: const BottomSheetThemeData(
-      backgroundColor: Colors.transparent,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
       ),
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: Colors.white,
       border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8.0),
-          borderSide: BorderSide.none),
+        borderRadius: BorderRadius.circular(8.0),
+        borderSide: BorderSide.none,
+      ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
         borderSide: const BorderSide(color: ColorConstants.primary),
       ),
-      errorBorder: OutlineInputBorder(
+    ),
+  );
+
+  static final ThemeData darkTheme = ThemeData(
+    brightness: Brightness.dark,
+    textTheme: GoogleFonts.dmSansTextTheme(),
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: ColorConstants.darkPrimary,
+      primary: ColorConstants.darkPrimary,
+      secondary: ColorConstants.secondary,
+      background: ColorConstants.darkBackground,
+      surface: ColorConstants.darkSurface,
+      error: ColorConstants.error,
+      brightness: Brightness.dark,
+    ),
+    scaffoldBackgroundColor: ColorConstants.darkBackground,
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: ColorConstants.darkPrimary,
+        foregroundColor: Colors.white,
+      ),
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        side: BorderSide(color: ColorConstants.darkPrimary),
+        foregroundColor: ColorConstants.darkPrimary,
+      ),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: ColorConstants.darkSurface,
+      border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8.0),
-        borderSide: const BorderSide(color: ColorConstants.error),
+        borderSide: BorderSide.none,
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8.0),
+        borderSide: const BorderSide(color: ColorConstants.darkPrimary),
       ),
     ),
   );
