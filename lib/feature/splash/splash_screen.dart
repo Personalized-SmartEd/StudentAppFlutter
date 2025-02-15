@@ -7,6 +7,7 @@ import 'package:smarted/feature/auth/auth_services.dart';
 import 'package:smarted/feature/auth/login/login_page.dart';
 import 'package:smarted/feature/auth/provider/user.dart';
 import 'package:smarted/feature/home/home_screen.dart';
+import 'package:smarted/feature/splash/gettingstarted.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -28,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(const Duration(seconds: 3), () {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       Navigator.of(context).pushReplacement(RouteAnimation.BottomUpRoute(
-          userProvider.user.id != "" ? Home() : Login()));
+          userProvider.user.id != "" ? Home() : OnboardingScreen()));
     });
     _riveController = OneShotAnimation(
       'Animation',

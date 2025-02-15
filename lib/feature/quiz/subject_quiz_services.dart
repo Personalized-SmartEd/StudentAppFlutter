@@ -10,6 +10,7 @@ import 'package:smarted/feature/auth/provider/user.dart';
 import 'package:smarted/feature/home/home_screen.dart';
 import 'package:smarted/feature/quiz/model/subjectQuiz.dart';
 import 'package:smarted/feature/quiz/provider/subjectQuiz.dart';
+import 'package:smarted/feature/quiz/quizresult.dart';
 import 'package:smarted/widgets/snackbar.dart';
 
 class SubjectQuizServices {
@@ -30,6 +31,7 @@ class SubjectQuizServices {
       print(userProvider.user.Token);
       print(subject);
       print("getting quizs");
+      print(int.parse(numberOfQuestions));
       http.Response res = await http.post(
         Uri.parse('${Endpoints.baseURL}/quiz'),
         headers: <String, String>{
@@ -63,7 +65,8 @@ class SubjectQuizServices {
       );
     } catch (e) {
       print(e.toString());
-      showSnackBar(context, " error ?? ${e.toString()}");
+      showSnackBar(context,
+          " Check your Internet connection / Its probably your fault ");
     }
   }
 
@@ -72,11 +75,19 @@ class SubjectQuizServices {
     required int ans,
     required String subject,
   }) async {
+    print("ans is");
+    print(ans);
     try {
       final navigator = Navigator.of(context);
       var userProvider = Provider.of<UserProvider>(context, listen: false);
       print(userProvider.user.Token);
       print("submitting quizs");
+      List<int> currentperformance = [
+        ...userProvider.user.PastPerformance,
+        ans
+      ];
+      print(currentperformance);
+      userProvider.updateUser(PastPerformance: currentperformance);
       http.Response res = await http.post(
         Uri.parse('${Endpoints.baseURL}/assessment/dynamic'),
         headers: <String, String>{
@@ -85,7 +96,7 @@ class SubjectQuizServices {
         },
         body: jsonEncode(<String, dynamic>{
           "subject": subject,
-          "scores": [ans]
+          "scores": currentperformance
         }),
       );
 
@@ -94,92 +105,28 @@ class SubjectQuizServices {
         context: context,
         onSuccess: () async {
           print(res.body);
-          showDialog(
-            context: context,
-            barrierDismissible:
-                true, // Allows dismissing the dialog by tapping outside
-            builder: (BuildContext context) {
-              return WillPopScope(
-                onWillPop: () async {
-                  navigator.pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context) => Home()),
-                    (route) => false,
-                  );
-                  return false;
-                },
-                child: AlertDialog(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  title: Text(
-                    "Quiz Submission Result",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blueAccent,
-                    ),
-                  ),
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        "Subject: math",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        "Performance Level: beginner",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        "Average Score: 0.0",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        "Trend: stable",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black87,
-                        ),
-                      ),
-                    ],
-                  ),
-                  actions: [
-                    TextButton(
-                      child: Text(
-                        "OK",
-                        style: TextStyle(
-                          color: Colors.blueAccent,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      onPressed: () {
-                        navigator.pushAndRemoveUntil(
-                          MaterialPageRoute(builder: (context) => Home()),
-                          (route) => false,
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              );
-            },
+          final Map<String, dynamic> responseData = jsonDecode(res.body);
+
+          // Extracting values from response
+          String subjectName = responseData["subject"] ?? "N/A";
+          String performanceLevel =
+              responseData["performance_level"] ?? "Unknown";
+          double averageScore =
+              (responseData["average_score"] ?? 0.0).toDouble();
+          String trend = responseData["trend"] ?? "Unknown";
+
+          showQuizResultDialog(
+            context,
+            responseData["subject"] ?? "N/A",
+            responseData["performance_level"] ?? "Unknown",
+            (responseData["average_score"] ?? 0.0).toDouble(),
+            responseData["trend"] ?? "Unknown",
           );
         },
       );
     } catch (e) {
       print(e.toString());
-      showSnackBar(context, " error ?? ${e.toString()}");
+      showSnackBar(context, "Error: ${e.toString()}");
     }
   }
 }

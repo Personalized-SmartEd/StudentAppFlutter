@@ -30,9 +30,13 @@ void httpErrorHandle({
       }
     } catch (e) {
       // Handle JSON parsing errors
-      errorMessage = 'Error parsing response: ${e.toString()}';
+      errorMessage = 'Check your internet connection';
+    }
+    print("adsfasdf");
+    if (response.body.contains("lookup")) {
+      showSnackBar(context, "Check you Internet");
     }
 
-    showSnackBar(context, errorMessage);
+    showSnackBar(context, "${errorMessage}");
   }
 }

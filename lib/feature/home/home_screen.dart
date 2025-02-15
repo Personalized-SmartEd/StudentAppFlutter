@@ -2,13 +2,18 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:smarted/core/route/routeAnimation.dart';
+import 'package:smarted/feature/auth/auth_services.dart';
 
 import 'package:smarted/feature/auth/provider/user.dart';
 import 'package:smarted/feature/classroom/classroom.dart';
+import 'package:smarted/feature/doubtbot/doubtbot.dart';
 import 'package:smarted/feature/home/page/home_page.dart';
 import 'package:smarted/feature/quiz/assestment_quiz_page.dart';
-
 import 'package:smarted/feature/quiz/subject_quiz.dart';
+import 'package:smarted/feature/studyplan/studyplanprovider.dart';
+import 'package:smarted/feature/tutorbot/tutorbot.dart';
+import 'package:smarted/shared/theme/theme.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -22,14 +27,14 @@ class _HomeState extends State<Home> {
     'Home',
     'Quiz',
     'Classrooms',
-    'Settings',
+    'TutorBot',
   ];
 
   final List<IconData> _icons = [
     Icons.home,
     Icons.emoji_events,
     Icons.bookmark,
-    Icons.settings,
+    Icons.boy_outlined,
   ];
 
   void _onItemTapped(int index) {
@@ -46,19 +51,17 @@ class _HomeState extends State<Home> {
         return SubjectQuizPage();
       case "Classrooms":
         return Classroom();
-      case "Settings":
-        return HomePage();
+      case "TutorBot":
+        return Tutorbot();
       default:
         return HomePage();
     }
-    // return Container();
   }
 
   @override
   void initState() {
-    super.initState();
     // AuthServices.logout(context);
-
+    Provider.of<StudyPlanProvider>(context, listen: false).loadStudyPlan();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       var user = Provider.of<UserProvider>(context, listen: false);
       print(user.user.id);
@@ -67,31 +70,21 @@ class _HomeState extends State<Home> {
       print(jsonEncode(user.user));
       if (user.user.LearningStyle == "") {
         Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => AssestmentQuiz()),
+          MaterialPageRoute(builder: (context) => AssessmentQuiz()),
           (route) => false,
         );
       }
     });
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text("Home"),
-      //   actions: [
-      //     IconButton(
-      //       onPressed: () {
-      //         AuthServices.logout(context);
-      //       },
-      //       icon: const Icon(Icons.logout),
-      //     )
-      //   ],
-      // ),
       body: _getBody(_labels[_selectedIndex]),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).scaffoldBackgroundColor,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(24),
             topRight: Radius.circular(24),
@@ -110,8 +103,8 @@ class _HomeState extends State<Home> {
           type: BottomNavigationBarType.fixed,
           elevation: 0,
           backgroundColor: Colors.transparent,
-          selectedItemColor: Colors.orange,
-          unselectedItemColor: Colors.grey,
+          selectedItemColor: Theme.of(context).colorScheme.primary,
+          unselectedItemColor: Theme.of(context).colorScheme.onSurface,
           showSelectedLabels: true,
           showUnselectedLabels: true,
           selectedFontSize: 12,
@@ -126,13 +119,15 @@ class _HomeState extends State<Home> {
                 padding: EdgeInsets.all(isSelected ? 12 : 8),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? Colors.orange.withOpacity(0.2)
+                      ? Theme.of(context).colorScheme.primary.withOpacity(0.2)
                       : Colors.transparent,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   _icons[index],
-                  color: isSelected ? Colors.orange : Colors.grey,
+                  color: isSelected
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(context).colorScheme.onSurface,
                   size: isSelected ? 28 : 24,
                 ),
               ),

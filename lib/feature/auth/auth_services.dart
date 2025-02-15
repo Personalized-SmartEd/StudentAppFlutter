@@ -13,6 +13,7 @@ import 'package:smarted/feature/auth/model/user.dart';
 import 'package:smarted/feature/auth/provider/user.dart';
 import 'package:smarted/feature/home/home_screen.dart';
 import 'package:smarted/feature/splash/splash_screen.dart';
+import 'package:smarted/feature/studyplan/studyplanprovider.dart';
 import 'package:smarted/widgets/snackbar.dart';
 
 class AuthServices {
@@ -103,7 +104,8 @@ class AuthServices {
       );
     } catch (e) {
       print(e.toString());
-      showSnackBar(context, " error ?? ${e.toString()}");
+      showSnackBar(context,
+          " Check your Internet connection / Its probably your fault ");
     }
   }
 
@@ -111,10 +113,14 @@ class AuthServices {
     final navigator = Navigator.of(context);
 
     var userProvider = Provider.of<UserProvider>(context, listen: false);
+    var studyplanprovider =
+        Provider.of<StudyPlanProvider>(context, listen: false);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? user = prefs.getString("user");
     print(user);
     await prefs.setString('user', '');
+    await prefs.setString('studyplan', '');
+    studyplanprovider.setStudyplan('');
     User usernew = User(
       id: '',
       Name: '',
@@ -140,6 +146,7 @@ class AuthServices {
     );
 
     userProvider.setUserFromModel(usernew);
+
     navigator.push(
       MaterialPageRoute(builder: (context) => const SplashScreen()),
     );
@@ -191,58 +198,23 @@ class AuthServices {
       final navigator = Navigator.of(context);
       var userProvider = Provider.of<UserProvider>(context, listen: false);
 
-      // var request = http.MultipartRequest(
-      //   'POST',
-      //   Uri.parse('${Endpoints.baseURL}/signup'),
-      // );
       http.Response res = await http.post(
         Uri.parse('${Endpoints.baseURL}/signup'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
         },
         body: jsonEncode(<String, dynamic>{
-          'Name': "Name",
+          'Name': Name,
           'Age': 22,
           'Password': Password,
           'Email': Email,
-          'SchoolName': "carmel",
-          'SchoolCode': "RFGE",
-          'Subjects': ['Maths', 'Science'],
+          'SchoolName': SchoolName,
+          'SchoolCode': SchoolCode,
+          'Subjects': Subjects,
           'ClassNumber': 7,
           'Image': 'Image',
         }),
       );
-
-      // request.fields.addAll({
-      // 'Name': "Name",
-      // 'Age': '22', // 🔹 Ensure it's a valid number
-      // 'Password': "12345678",
-      // 'Email': "gaurav@gmail.com",
-      // 'SchoolName': "carmel",
-      // 'SchoolCode': "RFGE",
-      // 'Subjects': "['Maths', 'Science']",
-      // 'Class': '7',
-      // 'Image': 'Image',
-      // });
-
-      // Add the Image file
-      // request.files.add(await http.MultipartFile.fromPath('Image', Image.path));
-
-      // Send the request
-      // http.StreamedResponse response = await request.send();
-
-      // Convert response to string
-      // String responseBody = await response.stream.bytesToString();
-
-      // print("DEBUG: Response Body: $responseBody");
-
-      // if (response.statusCode < 300) {
-      //   print("DEBUG: Success Response: $responseBody");
-      //   showSnackBar(context, "User created successfully.");
-      // } else {
-      //   print("Error: ${response.reasonPhrase}, Body: $responseBody");
-      //   showSnackBar(context, "Failed to create user. Try again later.");
-      // }
 
       httpErrorHandle(
         response: res,
@@ -309,7 +281,8 @@ class AuthServices {
       return user;
     } catch (e) {
       print(e.toString());
-      showSnackBar(context, " error ?? ${e.toString()}");
+      showSnackBar(context,
+          " Check your Internet connection / Its probably your fault ");
       return User(
         id: '',
         Name: '',

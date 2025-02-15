@@ -36,7 +36,8 @@ class ClassroomServices {
       );
     } catch (e) {
       print(e.toString());
-      showSnackBar(context, " error ?? ${e.toString()}");
+      showSnackBar(context,
+          " Check your Internet connection / Its probably your fault ");
     }
   }
 }

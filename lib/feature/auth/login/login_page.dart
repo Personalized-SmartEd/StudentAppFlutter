@@ -24,6 +24,8 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
+    _emailController.text = '';
+    _passwordController.text = '';
     _riveController = rive.OneShotAnimation(
       'Idle_CH',
       autoplay: true,

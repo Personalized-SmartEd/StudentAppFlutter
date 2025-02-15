@@ -24,26 +24,29 @@ class _QuizPageState extends State<QuizPage> {
   late List<int> ans;
   late List<Question> questions;
   bool showCorrectAnswer = false;
-  bool sub = false;
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController();
     questions = widget.assessment?.questions ?? widget.subjectQuiz!.questions;
-    ans = List<int>.filled(questions.length, 1, growable: false);
+    ans = List<int>.filled(questions.length, -1, growable: false);
   }
 
   void nextPage() {
-    if (_currentIndex < questions.length - 1) {
-      _pageController.nextPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-      setState(() {
-        _currentIndex++;
-        showCorrectAnswer = false;
-      });
+    if (selectedAnswers.containsKey(_currentIndex)) {
+      if (_currentIndex < questions.length - 1) {
+        _pageController.nextPage(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+        setState(() {
+          _currentIndex++;
+          showCorrectAnswer = false;
+        });
+      }
+    } else {
+      _showSelectAnswerDialog();
     }
   }
 
@@ -61,39 +64,58 @@ class _QuizPageState extends State<QuizPage> {
   }
 
   void checkAnswer(int index) {
-    setState(() {
-      showCorrectAnswer = true;
-    });
+    if (selectedAnswers.containsKey(index)) {
+      setState(() {
+        showCorrectAnswer = true;
+      });
+    } else {
+      _showSelectAnswerDialog();
+    }
   }
 
-  void _submitSubjectQuiz() {
-    print("subb");
-    if (widget.subjectQuiz == null) print("subbqq null");
-    if (widget.subject == null) print("subb null");
-    if (widget.subjectQuiz != null && widget.subject != null) {
-      int correctAnswers = 0;
-      widget.subjectQuiz!.questions.asMap().forEach((index, question) {
-        if (question.answer == question.options![ans[index]]) {
-          correctAnswers++;
-        }
-      });
-
-      print(correctAnswers);
-
-      SubjectQuizServices.submitSubjectQuiz(
-          ans: correctAnswers, subject: widget.subject!, context: context);
+  void submitQuiz() {
+    if (selectedAnswers.length == questions.length) {
+      if (widget.assessment != null) {
+        AssessmentServices.sumbmitAssessment(context, ans);
+      } else if (widget.subjectQuiz != null) {
+        SubjectQuizServices.submitSubjectQuiz(
+            ans: ans.where((a) => a != -1).length,
+            subject: widget.subject!,
+            context: context);
+      }
+    } else {
+      _showSelectAnswerDialog();
     }
+  }
+
+  void _showSelectAnswerDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Select an Answer"),
+        content: const Text("Please select an answer before proceeding."),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("OK"),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Quiz")),
+      appBar: AppBar(
+        title: Text("Question ${_currentIndex + 1}/${questions.length}"),
+        centerTitle: true,
+        backgroundColor: Colors.deepPurple,
+      ),
       body: PageView.builder(
         controller: _pageController,
         itemCount: questions.length,
-        physics:
-            const NeverScrollableScrollPhysics(), // Prevent swipe navigation
+        physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           return buildQuestionPage(questions[index], index);
         },
@@ -102,81 +124,108 @@ class _QuizPageState extends State<QuizPage> {
   }
 
   Widget buildQuestionPage(Question question, int index) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Question ${index + 1}/${questions.length}",
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            question.question ?? "No question",
-            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 20),
-          Column(
-            children: question.options!.map((option) {
-              bool isCorrect = showCorrectAnswer && option == question.answer;
-              return ListTile(
-                title: Text(option,
-                    style: TextStyle(color: isCorrect ? Colors.green : null)),
-                leading: Radio<String>(
-                  value: option,
-                  groupValue: selectedAnswers[index],
-                  onChanged: (value) {
-                    setState(() {
-                      selectedAnswers[index] = value!;
-                      ans[index] = question.options!.indexOf(value!);
-                    });
-                  },
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              elevation: 4,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Text(
+                      question.question ?? "No question",
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 20),
+                    Column(
+                      children: question.options!.map((option) {
+                        bool isSelected = selectedAnswers[index] == option;
+                        bool isCorrect =
+                            showCorrectAnswer && option == question.answer;
+                        bool isWrong = showCorrectAnswer &&
+                            isSelected &&
+                            option != question.answer;
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              selectedAnswers[index] = option;
+                              ans[index] = question.options!.indexOf(option);
+                            });
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(vertical: 5),
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: isCorrect
+                                  ? Colors.green
+                                  : isWrong
+                                      ? Colors.red
+                                      : isSelected
+                                          ? Colors.deepPurpleAccent
+                                          : Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Colors.deepPurple),
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    option,
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500,
+                                      color: isSelected || isCorrect || isWrong
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                ),
+                                if (isCorrect)
+                                  const Icon(Icons.check_circle,
+                                      color: Colors.green),
+                                if (isWrong)
+                                  const Icon(Icons.cancel, color: Colors.red),
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ],
                 ),
-              );
-            }).toList(),
-          ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              if (index > 0)
-                ElevatedButton(
-                  onPressed:
-                      selectedAnswers.containsKey(index) ? previousPage : null,
-                  child: const Text("Previous"),
-                ),
-              if (index < questions.length - 1)
-                ElevatedButton(
-                  onPressed:
-                      selectedAnswers.containsKey(index) ? nextPage : null,
-                  child: const Text("Next"),
-                ),
-              if (index == questions.length - 1)
-                ElevatedButton(
-                  onPressed: () {
-                    if (widget.assessment != null) {
-                      AssessmentServices.sumbmitAssessment(context, ans);
-                    } else if (widget.subjectQuiz != null) {
-                      // Add logic to submit subject quiz answers
-                      _submitSubjectQuiz();
-                    }
-                    print("User Answers: $selectedAnswers");
-                    print("User Answers: $ans");
-                  },
-                  child: const Text("Submit"),
-                ),
-              if (widget.subjectQuiz != null)
-                ElevatedButton(
-                  onPressed: selectedAnswers.containsKey(index)
-                      ? () => checkAnswer(index)
-                      : null,
-                  child: const Text("Check Answer"),
-                ),
-            ],
-          ),
-        ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            LinearProgressIndicator(
+              value: (_currentIndex + 1) / questions.length,
+              backgroundColor: Colors.grey[300],
+              valueColor: const AlwaysStoppedAnimation<Color>(Colors.deepPurple),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                if (index < questions.length - 1)
+                  ElevatedButton(onPressed: nextPage, child: const Text("Next")),
+                if (widget.subjectQuiz != null)
+                  ElevatedButton(
+                      onPressed: () => checkAnswer(index),
+                      child: const Text("Show Correct Answer")),
+                if (index == questions.length - 1)
+                  ElevatedButton(
+                      onPressed: submitQuiz, child: const Text("Submit")),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

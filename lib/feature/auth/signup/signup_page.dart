@@ -27,13 +27,15 @@ class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
   final picker = ImagePicker();
   int tag = 3;
+
   List<String> options = [
-    'Science',
-    'Maths',
-    'History',
-    'English',
-    'Geography',
+    'science',
+    'math',
+    'english',
+    'social-science',
+    'hindi',
   ];
+
   List<String> tags = ['Science'];
   final usersMemoizer = C2ChoiceMemoizer<String>();
   List<String> formValue = [];
@@ -91,13 +93,13 @@ class _SignUpState extends State<SignUp> {
   @override
   void initState() {
     super.initState();
-    _emailController.text = 'ggf@gmail.com';
-    _passwordController.text = 'password';
-    _ageController.text = '15';
-    _nameController.text = 'John Doe';
-    _schoolNameController.text = 'School Name';
-    _schoolCodeController.text = 'School Code';
-    _classController.text = '1';
+    _emailController.text = '';
+    _passwordController.text = '';
+    _ageController.text = '';
+    _nameController.text = '';
+    _schoolNameController.text = '';
+    _schoolCodeController.text = '';
+    _classController.text = '';
   }
 
   Future<void> _Signup() async {
@@ -156,18 +158,6 @@ class _SignUpState extends State<SignUp> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              // GestureDetector(
-              //   onTap: _onIconTapped,
-              //   child: SizedBox(
-              //     height: MediaQuery.of(context).size.height / 2,
-              //     width: MediaQuery.of(context).size.width,
-              //     child: RiveAnimation.asset(
-              //       'assets/rive/bounce-button.riv',
-              //       controllers: [_riveController],
-              //       fit: BoxFit.cover,
-              //     ),
-              //   ),
-              // ),
               Form(
                 key: _formKey,
                 child: Column(
@@ -186,7 +176,7 @@ class _SignUpState extends State<SignUp> {
                     ),
                     const SizedBox(height: 16),
                     InputBox(
-                      placeholder: "********",
+                      placeholder: "Name",
                       controller: _nameController,
                       obscureText: false,
                     ),

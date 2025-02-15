@@ -50,6 +50,12 @@ dependencies:
   image_picker: ^1.1.2
   chips_choice: ^3.0.1
   font_awesome_flutter: ^10.8.0
+  percent_indicator: ^4.2.4
+  fl_chart: ^0.63.0
+  speech_to_text: ^7.0.0
+  flutter_tts: ^4.2.2
+
+  # fl_chart: ^0.70.2
   
 
 dev_dependencies:
@@ -80,6 +86,10 @@ flutter:
     - assets/rive/kid-walk.riv
     - assets/rive/bounce-button.riv
     - assets/rive/skater_dude.riv
+    - assets/rive/talker.riv
+    - assets/animations/learning.json
+    - assets/animations/student.json
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -12,7 +12,7 @@ import 'package:smarted/feature/quiz/model/assessment.dart';
 import 'package:smarted/feature/quiz/provider/assessment.dart';
 
 class AssessmentServices {
-  static void getAssessment(BuildContext context) async {
+  static Future<void> getAssessment(BuildContext context) async {
     User user = Provider.of<UserProvider>(context, listen: false).user;
     var assessmentProvider =
         Provider.of<AssessmentProvider>(context, listen: false);
@@ -28,17 +28,19 @@ class AssessmentServices {
       print("Gettin");
 
       httpErrorHandle(
-          response: res,
-          context: context,
-          onSuccess: () {
-            print("Got quiz");
-            print(res.body);
-            // Assessment questions = Assessment.fromJson(jsonDecode(res.body));
-            Assessment assessment = Assessment.fromJson(res.body);
-            assessmentProvider.setAssessmentFromModel(assessment);
-          });
+        response: res,
+        context: context,
+        onSuccess: () {
+          print("Got quiz");
+          print(res.body);
+          // Assessment questions = Assessment.fromJson(jsonDecode(res.body));
+          Assessment assessment = Assessment.fromJson(res.body);
+          assessmentProvider.setAssessmentFromModel(assessment);
+        },
+      );
     } catch (e) {
       print(e.toString());
+      getAssessment(context);
     }
   }
 
