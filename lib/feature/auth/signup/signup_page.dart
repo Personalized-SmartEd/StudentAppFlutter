@@ -36,7 +36,7 @@ class _SignUpState extends State<SignUp> {
     'hindi',
   ];
 
-  List<String> tags = ['Science'];
+  List<String> tags = ['science'];
   final usersMemoizer = C2ChoiceMemoizer<String>();
   List<String> formValue = [];
   List<String> subjects = [];
@@ -79,9 +79,8 @@ class _SignUpState extends State<SignUp> {
           CupertinoActionSheetAction(
             child: Text('Camera'),
             onPressed: () {
-              // close the options modal
               Navigator.of(context).pop();
-              // get image from camera
+
               getImageFromCamera();
             },
           ),
