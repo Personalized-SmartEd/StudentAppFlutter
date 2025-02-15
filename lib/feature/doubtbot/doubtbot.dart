@@ -32,11 +32,11 @@ class _DoubtbotState extends State<Doubtbot> {
 
   Future<void> _showSubjectSelectionDialog() async {
     List<String> subjects = [
-      'science',
-      'math',
-      'english',
-      'social-science',
-      'hindi'
+      'Science',
+      'Math',
+      'English',
+      'Social Science',
+      'Hindi'
     ];
 
     String? selected = await showDialog<String>(
@@ -44,15 +44,44 @@ class _DoubtbotState extends State<Doubtbot> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text("Select a Subject"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: subjects.map((subject) {
-              return ListTile(
-                title: Text(subject),
-                onTap: () => Navigator.pop(context, subject.toLowerCase()),
-              );
-            }).toList(),
+          content: SingleChildScrollView(
+            child: Wrap(
+              spacing: 8.0,
+              runSpacing: 8.0,
+              children: subjects.map((subject) {
+                return GestureDetector(
+                  onTap: () => Navigator.pop(context, subject.toLowerCase()),
+                  child: Container(
+                    padding: const EdgeInsets.all(16.0),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                      borderRadius: BorderRadius.circular(12.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 4.0,
+                          offset: Offset(2, 2),
+                        ),
+                      ],
+                    ),
+                    child: Text(
+                      subject,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
           ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel"),
+            ),
+          ],
         );
       },
     );

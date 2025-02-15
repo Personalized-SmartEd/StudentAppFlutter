@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:smarted/feature/quiz/assessment_services.dart';
 import 'package:smarted/feature/quiz/model/assessment.dart';
 import 'package:smarted/feature/quiz/model/question.dart';
@@ -129,22 +130,36 @@ class _QuizPageState extends State<QuizPage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            // Question Card with a futuristic look
             Card(
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
+                borderRadius: BorderRadius.circular(20),
               ),
-              elevation: 4,
+              elevation: 6,
+              shadowColor: Colors.deepPurpleAccent,
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
                     Text(
+                      "Question ${index + 1}",
+                      style: GoogleFonts.pressStart2p(
+                        fontSize: 16,
+                        color: Colors.deepPurple,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
                       question.question ?? "No question",
-                      style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold),
+                      style: GoogleFonts.nunito(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 20),
+
+                    // Options with a gaming look
                     Column(
                       children: question.options!.map((option) {
                         bool isSelected = selectedAnswers[index] == option;
@@ -160,28 +175,39 @@ class _QuizPageState extends State<QuizPage> {
                               ans[index] = question.options!.indexOf(option);
                             });
                           },
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(vertical: 5),
-                            padding: const EdgeInsets.all(12),
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                            margin: const EdgeInsets.symmetric(vertical: 8),
+                            padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
-                              color: isCorrect
-                                  ? Colors.green
+                              gradient: isCorrect
+                                  ? LinearGradient(
+                                      colors: [Colors.green, Colors.lightGreen])
                                   : isWrong
-                                      ? Colors.red
+                                      ? LinearGradient(
+                                          colors: [Colors.red, Colors.orange])
                                       : isSelected
-                                          ? Colors.deepPurpleAccent
-                                          : Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: Colors.deepPurple),
+                                          ? LinearGradient(colors: [
+                                              Colors.purpleAccent,
+                                              Colors.deepPurple
+                                            ])
+                                          : LinearGradient(colors: [
+                                              Colors.grey.shade300,
+                                              Colors.white
+                                            ]),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                  color: Colors.deepPurple, width: 2),
                             ),
                             child: Row(
                               children: [
                                 Expanded(
                                   child: Text(
                                     option,
-                                    style: TextStyle(
+                                    style: GoogleFonts.nunito(
                                       fontSize: 18,
-                                      fontWeight: FontWeight.w500,
+                                      fontWeight: FontWeight.bold,
                                       color: isSelected || isCorrect || isWrong
                                           ? Colors.white
                                           : Colors.black,
@@ -204,24 +230,91 @@ class _QuizPageState extends State<QuizPage> {
               ),
             ),
             const SizedBox(height: 20),
-            LinearProgressIndicator(
-              value: (_currentIndex + 1) / questions.length,
-              backgroundColor: Colors.grey[300],
-              valueColor: const AlwaysStoppedAnimation<Color>(Colors.deepPurple),
+
+            // Custom Progress Indicator with a gaming touch
+            Stack(
+              children: [
+                Container(
+                  height: 20,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.grey[300],
+                  ),
+                ),
+                Positioned(
+                  child: LayoutBuilder(
+                    builder: (context, constraints) => Container(
+                      height: 20,
+                      width: constraints.maxWidth *
+                          ((_currentIndex + 1) / questions.length),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        gradient: const LinearGradient(
+                            colors: [Colors.deepPurple, Colors.blueAccent]),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 20),
+
+            // Buttons with a neon glow effect
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 if (index < questions.length - 1)
-                  ElevatedButton(onPressed: nextPage, child: const Text("Next")),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.deepPurple,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      shadowColor: Colors.deepPurpleAccent,
+                      elevation: 6,
+                    ),
+                    onPressed: nextPage,
+                    child: const Text(
+                      "Next",
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                  ),
                 if (widget.subjectQuiz != null)
                   ElevatedButton(
-                      onPressed: () => checkAnswer(index),
-                      child: const Text("Show Correct Answer")),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blueAccent,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      shadowColor: Colors.blueAccent,
+                      elevation: 6,
+                    ),
+                    onPressed: () => checkAnswer(index),
+                    child: const Text(
+                      "Show Answer",
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                  ),
                 if (index == questions.length - 1)
                   ElevatedButton(
-                      onPressed: submitQuiz, child: const Text("Submit")),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      shadowColor: Colors.greenAccent,
+                      elevation: 6,
+                    ),
+                    onPressed: submitQuiz,
+                    child: const Text(
+                      "Submit",
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                  ),
               ],
             ),
           ],
